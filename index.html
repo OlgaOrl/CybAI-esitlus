@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CybAI — Lõpuesitlus</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg: #040b14;
+            --accent: #00d4ff;
+            --danger: #ff3b5c;
+            --success: #00ff9d;
+            --text: #e0e6ed;
+            --muted: #6b7a8d;
+            --card-bg: rgba(0, 212, 255, 0.05);
+            --card-border: rgba(0, 212, 255, 0.15);
+        }
+
+        .reveal {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+
+        .reveal .slides {
+            text-align: left;
+        }
+
+        .reveal .slides section {
+            background: var(--bg);
+            padding: 40px 60px;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            text-transform: none;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .reveal h1 { font-size: 2.8em; }
+        .reveal h2 { font-size: 1.8em; margin-bottom: 0.6em; }
+        .reveal h3 { font-size: 1.2em; }
+
+        .reveal p, .reveal li {
+            font-size: 0.75em;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .reveal ul { list-style: none; padding-left: 0; }
+        .reveal ul li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        .reveal ul li::before {
+            content: '›';
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 4px;
+            font-size: 1.2em;
+        }
+
+        .accent { color: var(--accent) !important; }
+        .danger { color: var(--danger) !important; }
+        .success { color: var(--success) !important; }
+        .muted { color: var(--muted) !important; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .bold { font-weight: 700; }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin: 12px 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .card-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-card .label {
+            font-size: 0.65em;
+            color: var(--muted);
+            margin-top: 4px;
+            display: block;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.6em;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            margin: 3px;
+        }
+
+        .tag.danger-tag {
+            background: rgba(255, 59, 92, 0.1);
+            border-color: rgba(255, 59, 92, 0.3);
+            color: var(--danger);
+        }
+
+        .tag.success-tag {
+            background: rgba(0, 255, 157, 0.1);
+            border-color: rgba(0, 255, 157, 0.3);
+            color: var(--success);
+        }
+
+        .title-slide {
+            text-align: center !important;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 0;
+            background: linear-gradient(135deg, var(--accent), #0088ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1em;
+            color: var(--muted);
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .shield-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .terminal {
+            background: #0a1628;
+            border: 1px solid #1a2a40;
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6em;
+            line-height: 1.8;
+            margin: 16px 0;
+        }
+
+        .terminal .prompt { color: var(--success); }
+        .terminal .cmd { color: var(--text); }
+        .terminal .output { color: var(--muted); }
+        .terminal .warn { color: #ffaa00; }
+        .terminal .err { color: var(--danger); }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--success));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 8px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--bg);
+        }
+
+        .timeline-item h3 {
+            font-size: 0.85em;
+            margin: 0 0 4px 0;
+        }
+
+        .timeline-item p {
+            font-size: 0.65em !important;
+            color: var(--muted) !important;
+            margin: 0;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 28px 20px;
+            text-align: center;
+        }
+
+        .team-card .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #0088ff);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--bg);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .team-card .name {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .team-card .role {
+            font-size: 0.6em;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 4px;
+        }
+
+        .price-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 136, 255, 0.08));
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            max-width: 360px;
+            margin: 20px auto;
+        }
+
+        .price-card .price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .price-card .period {
+            font-size: 0.7em;
+            color: var(--muted);
+        }
+
+        .price-card .compare {
+            font-size: 0.65em;
+            color: var(--danger);
+            margin-top: 8px;
+            text-decoration: line-through;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .elevator {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(0, 255, 157, 0.04));
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 28px;
+            margin-top: 20px;
+            font-size: 0.8em;
+            line-height: 1.7;
+            text-align: center;
+            font-style: italic;
+            color: var(--text);
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.5em;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px;
+            letter-spacing: 0.1em;
+        }
+
+        .glow {
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .reveal .slide-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--muted);
+            background: transparent;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0 10px 36px;
+            position: relative;
+            font-size: 0.72em;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.07);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--success);
+            position: absolute;
+            left: 8px;
+            font-weight: bold;
+        }
+
+        .fragment.fade-up {
+            transform: translateY(20px);
+        }
+
+        /* Scanline effect on title */
+        .scanline {
+            position: relative;
+            overflow: hidden;
+        }
+        .scanline::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 212, 255, 0.015) 2px,
+                rgba(0, 212, 255, 0.015) 4px
+            );
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: Title -->
+            <section class="title-slide scanline">
+                <div class="shield-icon">🛡️</div>
+                <h1 class="glow">CybAI</h1>
+                <p class="subtitle">Häkker ei maga — CybAI ka mitte.</p>
+                <p class="muted" style="font-size: 0.55em; margin-top: 40px; font-family: 'JetBrains Mono', monospace;">
+                    Võru 2026
+                </p>
+            </section>
+
+            <!-- SLIDE 2: Probleem -->
+            <section>
+                <span class="section-number">01 / PROBLEEM</span>
+                <h2>Probleem</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <p class="danger bold" style="font-size: 0.85em; margin: 0 0 8px 0;">⏰ Aeg ei jätku</p>
+                        <p style="margin: 0;">IT-administraator ei jõua käsitsi kontrollida kümneid seadmeid.</p>
+                    </div>
+                    <div class="card">
+                        <p class="danger bold" style="font-size: 0.85em; margin: 0 0 8px 0;">👁️ Pimedad nurgad</p>
+                        <p style="margin: 0;">Turvariskid jäävad nädalateks märkamata.</p>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 16px;">
+                    <p class="danger bold" style="font-size: 0.85em; margin: 0 0 8px 0;">🌙 Öösel pole kedagi</p>
+                    <p style="margin: 0;">Ründed toimuvad öösel, kui keegi ei jälgi. Ettevõte saab teada alles hommikul — kui üldse.</p>
+                </div>
+
+                <div class="terminal" style="margin-top: 20px;">
+                    <span class="err">[ ALERT ]</span> <span class="output">Brute-force rünnak tuvastatud portil 22</span><br>
+                    <span class="warn">[ WARN  ]</span> <span class="output">Keegi ei reageeri... 6h 23min tagasi</span>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: Sihtgrupp -->
+            <section>
+                <span class="section-number">02 / SIHTGRUPP</span>
+                <h2>Sihtgrupp</h2>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <p style="font-size: 0.9em; margin: 0; line-height: 1.7;">
+                        Eesti ettevõtted, kellel on <span class="accent bold">tundlikud andmed</span> —
+                        serverid, andmebaasid — aga <span class="danger">pole piisavat kaitset</span>.
+                    </p>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <p class="accent bold" style="font-size: 0.85em; margin: 0 0 6px 0;">🗄️ Serverid</p>
+                        <p style="margin: 0; font-size: 0.7em;">Ettevõtted, kes hoiavad oma serverites kliendiandmeid, lepinguid ja ärikriitilist infot</p>
+                    </div>
+                    <div class="card">
+                        <p class="accent bold" style="font-size: 0.85em; margin: 0 0 6px 0;">🗃️ Andmebaasid</p>
+                        <p style="margin: 0; font-size: 0.7em;">Isikuandmed, finantsinfo ja muud reguleeritud andmed, mis vajavad kaitset</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: Lahendus -->
+            <section>
+                <span class="section-number">03 / LAHENDUS</span>
+                <h2>Lahendus</h2>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <p style="font-size: 0.85em; margin: 0;">
+                        <span class="accent bold">CybAI</span> on self-hosted küberturvalisuse agent, mis skanib
+                        ettevõtte IT-infrastruktuuri <span class="accent">automaatselt 24/7</span>, tuvastab turvariskid
+                        ja annab IT-administraatorile kohe <span class="success">selged soovitused</span> nende parandamiseks.
+                    </p>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.85em; margin: 0 0 6px 0;">🔍 Skaneerimine</p>
+                        <p style="margin: 0; font-size: 0.65em;">Pordid, teenused, SSL, uuendused</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.85em; margin: 0 0 6px 0;">🤖 AI analüüs</p>
+                        <p style="margin: 0; font-size: 0.65em;">Riskide selgitus eesti keeles</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.85em; margin: 0 0 6px 0;">🔔 Teavitused</p>
+                        <p style="margin: 0; font-size: 0.65em;">SMS + email kohe kui risk ilmneb</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.85em; margin: 0 0 6px 0;">📊 Dashboard</p>
+                        <p style="margin: 0; font-size: 0.65em;">Selge ülevaade kogu infra kohta</p>
+                    </div>
+                </div>
+
+                <div class="terminal" style="margin-top: 16px;">
+                    <span class="prompt">cybai $</span> <span class="cmd">scan --target 192.168.1.0/24</span><br>
+                    <span class="output">[██████████] 100% — 24 seadet leitud</span><br>
+                    <span class="err">[KRIITILINE]</span> <span class="output">Port 22 avatud — SSH brute-force oht</span><br>
+                    <span class="warn">[HOIATUS]</span> <span class="output">SSL sertifikaat aegub 3 päeva pärast</span><br>
+                    <span class="prompt">[AI]</span> <span class="success">Soovitus: Piira SSH juurdepääs IP-põhiselt...</span>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Väärtuspakkumine -->
+            <section>
+                <span class="section-number">04 / VÄÄRTUSPAKKUMINE</span>
+                <h2>Väärtuspakkumine</h2>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <p style="font-size: 0.85em; margin: 0;">
+                        CybAI on IT-administraatori <span class="accent bold">digitaalne valvekoer</span> —
+                        leiab turvariskid <span class="success">enne kui ründaja</span> need leiab.
+                    </p>
+                </div>
+
+                <ul class="feature-list">
+                    <li>Automaatne 24/7 monitooring</li>
+                    <li>AI-põhised soovitused</li>
+                    <li>SMS + email teavitused reaalajas</li>
+                    <li>CVSS riskiskoorid iga haavatavuse kohta</li>
+                    <li>Seadistamine alla 30 minutiga</li>
+                    <li>Self-hosted — andmed jäävad ettevõttesse</li>
+                </ul>
+            </section>
+
+            <!-- SLIDE 6: Eristumine -->
+            <section>
+                <span class="section-number">05 / ERISTUMINE</span>
+                <h2>Miks CybAI?</h2>
+
+                <div class="card">
+                    <p style="font-size: 0.95em; margin: 0; line-height: 1.8;">
+                        <span class="accent bold">CybAI</span> on ainus küberturvalisuse tööriist, mis töötab <span class="accent bold">ettevõtte enda serveris</span>, selgitab riske <span class="accent bold">eesti keeles</span> ja on oluliselt <span class="success bold">odavam</span> kui konkurendid.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Prototüüp -->
+            <section>
+                <span class="section-number">06 / PROTOTÜÜBI DEMO</span>
+                <h2>Prototüüp</h2>
+
+                <div class="card" style="margin-bottom: 16px;">
+                    <p style="margin: 0; font-size: 0.8em;">
+                        🔗 <a href="https://secure-cyb-insight.lovable.app" target="_blank" class="accent mono" style="text-decoration: none;">secure-cyb-insight.lovable.app</a>
+                    </p>
+                </div>
+
+                <p style="font-size: 0.75em; margin-bottom: 12px;">Töötav demo näitab:</p>
+
+                <div class="card-grid-3">
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.8em; margin: 0 0 4px 0;">🔓 Avatud pordid</p>
+                        <p class="muted" style="margin: 0; font-size: 0.6em;">Automaatne tuvastamine</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="danger bold" style="font-size: 0.8em; margin: 0 0 4px 0;">🚨 Brute-force</p>
+                        <p class="muted" style="margin: 0; font-size: 0.6em;">Rünnakute tuvastamine</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.8em; margin: 0 0 4px 0;">📜 SSL aegumine</p>
+                        <p class="muted" style="margin: 0; font-size: 0.6em;">Sertifikaadi jälgimine</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.8em; margin: 0 0 4px 0;">📊 CVSS skoor</p>
+                        <p class="muted" style="margin: 0; font-size: 0.6em;">Riskide hindamine</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="success bold" style="font-size: 0.8em; margin: 0 0 4px 0;">🤖 AI selgitused</p>
+                        <p class="muted" style="margin: 0; font-size: 0.6em;">Eesti keeles</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <p class="accent bold" style="font-size: 0.8em; margin: 0 0 4px 0;">📱 Teavitused</p>
+                        <p class="muted" style="margin: 0; font-size: 0.6em;">SMS + email</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <p class="muted" style="font-size: 0.6em;">↓ Live demo ↓</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Cover Story / Tulevik -->
+            <section>
+                <span class="section-number">07 / COVER STORY</span>
+                <h2>Kuhu me jõuame?</h2>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3 class="accent">Q2 2026 — Automaatne parandamine</h3>
+                        <p>SSH automaatne konfigureerimine ja turvaaukude sulgemine</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="accent">Q3 2026 — CVE integratsioon</h3>
+                        <p>CVE andmebaasi reaalajas integratsioon — teadaolevad haavatavused kohe nähtavad</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="accent">Q4 2026 — Mobiilirakendus</h3>
+                        <p>Push-teavitused ja ülevaade otse telefonist</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="accent">2027 — Email anomaaliad</h3>
+                        <p>Email anomaaliate tuvastamine — phishing ja BEC rünnakute kaitse</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="success" style="font-size: 0.95em;">🎯 Visioon</h3>
+                        <p style="color: var(--text) !important; font-size: 0.72em !important;">
+                            Kasvada Eesti juhtivaks küberturvalisuse lahenduseks väikeettevõtetele
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: Meeskond -->
+            <section>
+                <span class="section-number">08 / MEESKOND</span>
+                <h2>Meeskond</h2>
+
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="avatar">O</div>
+                        <div class="name">Olga</div>
+                        <div class="role">Noorem tarkvaraarendaja</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="avatar">R</div>
+                        <div class="name">Robert</div>
+                        <div class="role">Noorem arendaja, analüütik</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="avatar">M</div>
+                        <div class="name">Marten</div>
+                        <div class="role">Noorem tarkvaraarendaja</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Lõpp -->
+            <section class="title-slide scanline">
+                <div class="shield-icon">🛡️</div>
+                <h1 class="glow">CybAI</h1>
+                <p class="subtitle">Küsimused?</p>
+                <div style="margin-top: 40px;">
+                    <a href="https://secure-cyb-insight.lovable.app" target="_blank" class="tag" style="text-decoration: none;">secure-cyb-insight.lovable.app</a>
+                </div>
+                <p class="muted" style="font-size: 0.55em; margin-top: 30px;">
+                    Täname kuulamast!
+                </p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            backgroundTransition: 'fade',
+            center: false,
+            width: 1200,
+            height: 700,
+            margin: 0.04,
+        });
+    </script>
+</body>
+</html>
